@@ -1,0 +1,12 @@
+[
+  {"model": "inventory.foodcategory", "pk": 1, "fields": {"name": "Vegetables", "icon": "🥦", "color": "#4CAF50"}},
+  {"model": "inventory.foodcategory", "pk": 2, "fields": {"name": "Fruits", "icon": "🍎", "color": "#FF9800"}},
+  {"model": "inventory.foodcategory", "pk": 3, "fields": {"name": "Dairy", "icon": "🥛", "color": "#2196F3"}},
+  {"model": "inventory.foodcategory", "pk": 4, "fields": {"name": "Meat & Poultry", "icon": "🍗", "color": "#F44336"}},
+  {"model": "inventory.foodcategory", "pk": 5, "fields": {"name": "Grains & Cereals", "icon": "🌾", "color": "#795548"}},
+  {"model": "inventory.foodcategory", "pk": 6, "fields": {"name": "Packaged Food", "icon": "📦", "color": "#9C27B0"}},
+  {"model": "inventory.foodcategory", "pk": 7, "fields": {"name": "Beverages", "icon": "🧃", "color": "#00BCD4"}},
+  {"model": "inventory.foodcategory", "pk": 8, "fields": {"name": "Spices & Condiments", "icon": "🧂", "color": "#FF5722"}},
+  {"model": "inventory.foodcategory", "pk": 9, "fields": {"name": "Snacks", "icon": "🍿", "color": "#FFC107"}},
+  {"model": "inventory.foodcategory", "pk": 10, "fields": {"name": "Frozen", "icon": "🧊", "color": "#607D8B"}}
+]
