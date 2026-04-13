@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🌿 FreshTrack — Food Waste Reduction System
 
 A full-stack web application built with **Django** (Python) + **MySQL** backend and a custom HTML/CSS/JS frontend to help households track groceries, reduce food waste, and get smart recipe recommendations.
@@ -122,3 +123,6 @@ The engine scores recipes using:
 - **RecipeIngredient**: ingredient name, quantity, is_optional, substitutes (JSON)
 - **UserProfile**: waste stats, dietary preferences, streak tracking
 - **DailyLog**: daily usage/waste tracking per user
+=======
+# BLITZhackathon
+>>>>>>> f8872764656941b2e9bdce218f7ca410339a92fb
