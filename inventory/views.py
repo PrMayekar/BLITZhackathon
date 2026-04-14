@@ -51,6 +51,26 @@ class FoodItemViewSet(viewsets.ModelViewSet):
             'streak_days': profile.streak_days if profile else 0,
         })
 
+    @action(detail=False, methods=['post'])
+    def advance_time(self, request):
+        days = int(request.data.get('days', 1))
+        from datetime import timedelta
+        from django.db.models import F
+        
+        # Shift dates backwards so next time we check timezone.now(), the item seems older
+        qs = FoodItem.objects.all()
+        qs.update(
+            purchase_date=F('purchase_date') - timedelta(days=days),
+            # Note: created_at is auto_now_add, so we need to be careful, but we can update it directly
+            created_at=F('created_at') - timedelta(days=days),
+            updated_at=F('updated_at') - timedelta(days=days)
+        )
+        # Only update items with a set expiry date
+        qs.filter(expiry_date__isnull=False).update(
+            expiry_date=F('expiry_date') - timedelta(days=days)
+        )
+        return Response({'status': f'Advanced time by {days} days'})
+
     @action(detail=True, methods=['post'])
     def mark_consumed(self, request, pk=None):
         item = self.get_object()

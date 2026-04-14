@@ -219,6 +219,25 @@ function bindEvents() {
     loadRecipes();
   });
 
+  // Dev mode: advance time
+  const devAdvanceBtn = document.getElementById('dev-advance-time');
+  if (devAdvanceBtn) {
+    devAdvanceBtn.addEventListener('click', async () => {
+      try {
+        await API.post('/inventory/items/advance_time/', { days: 1 });
+        toast('⏩ Fast forwarded 1 day', 'success');
+        await loadItems();
+        await loadDashboard();
+        if (state.currentFilter !== 'all' || document.getElementById('view-pantry').classList.contains('active')) {
+             renderPantry();
+        }
+        loadRecipes();
+      } catch (err) {
+        toast('Failed to advance time', 'error');
+      }
+    });
+  }
+
   // Modal close
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('recipe-modal').addEventListener('click', (e) => {
