@@ -242,10 +242,60 @@
               <h2 class="view-title">Add Groceries ➕</h2>
               <p class="view-subtitle">Log new food items and set expiry dates</p>
             </div>
+            <button class="btn-secondary" id="toggle-manual-add" type="button">✍️ Manual entry</button>
           </div>
 
           <div class="add-item-layout">
-            <form id="add-item-form" class="add-item-form">
+            <!-- Quick Pick (streamlined) -->
+            <div class="quick-add" id="quick-add">
+              <div class="quick-add-card">
+                <div class="quick-add-header">
+                  <h3 class="quick-add-title">Quick Pick</h3>
+                  <div class="quick-add-sub">Click an item to add it fast</div>
+                </div>
+
+                <div class="quick-add-controls">
+                  <div class="quick-add-search">
+                    <input id="quick-grocery-search" type="text" placeholder="Search groceries (e.g. milk, rice, onions)..." />
+                  </div>
+                  <div class="quick-add-row">
+                    <div class="form-group">
+                      <label>Qty</label>
+                      <input type="number" id="quick-qty-value" min="0.1" step="0.1" value="1" />
+                    </div>
+                    <div class="form-group">
+                      <label>Unit</label>
+                      <select id="quick-qty-unit">
+                        <option>pieces</option>
+                        <option>grams</option>
+                        <option>kg</option>
+                        <option>ml</option>
+                        <option>litres</option>
+                        <option>cups</option>
+                        <option>packets</option>
+                        <option>bunch</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Store</label>
+                      <select id="quick-storage">
+                        <option value="pantry">🚪 Pantry</option>
+                        <option value="fridge">🧊 Refrigerator</option>
+                        <option value="freezer">❄️ Freezer</option>
+                        <option value="counter">🍽️ Counter</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="quick-add-hint" id="quick-add-hint">Tip: Start typing to filter, then click an item.</div>
+                </div>
+
+                <div class="quick-add-list" id="quick-grocery-list" aria-label="Quick grocery list"></div>
+              </div>
+            </div>
+
+            <!-- Manual form (original functionality) -->
+            <form id="add-item-form" class="add-item-form manual-add hidden">
               <details class="form-accordion" open>
                 <summary class="accordion-summary">
                   <span>Item Details</span>

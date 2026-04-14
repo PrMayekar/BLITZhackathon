@@ -204,6 +204,9 @@ function bindEvents() {
     }
   });
 
+  // Quick Pick + Manual toggle (Add Groceries)
+  initQuickAdd();
+
   // Add Item Accordion "plus/minus" indicator
   document.querySelectorAll('.form-accordion').forEach(details => {
     const sigil = details.querySelector('.accordion-sigil');
@@ -240,6 +243,105 @@ function bindEvents() {
   document.getElementById('recipe-modal').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModal();
   });
+}
+
+function initQuickAdd() {
+  const toggleBtn = document.getElementById('toggle-manual-add');
+  const quickWrap = document.getElementById('quick-add');
+  const manualForm = document.querySelector('#add-item-form.manual-add');
+  const search = document.getElementById('quick-grocery-search');
+  const list = document.getElementById('quick-grocery-list');
+
+  if (!toggleBtn || !quickWrap || !manualForm || !search || !list) return;
+
+  const quickQtyVal = document.getElementById('quick-qty-value');
+  const quickQtyUnit = document.getElementById('quick-qty-unit');
+  const quickStorage = document.getElementById('quick-storage');
+
+  const COMMON_GROCERIES = [
+    // Produce
+    'Tomatoes', 'Onions', 'Potatoes', 'Garlic', 'Ginger', 'Carrots', 'Cucumber', 'Spinach', 'Capsicum', 'Lemons', 'Bananas', 'Apples',
+    // Dairy / proteins
+    'Milk', 'Curd / Yogurt', 'Paneer', 'Eggs', 'Chicken', 'Fish',
+    // Pantry staples
+    'Rice', 'Wheat flour (Atta)', 'Bread', 'Pasta', 'Lentils (Dal)', 'Chickpeas', 'Kidney beans (Rajma)', 'Oats',
+    // Condiments
+    'Cooking oil', 'Butter', 'Cheese', 'Salt', 'Sugar', 'Tea', 'Coffee',
+    // Herbs/spices (common)
+    'Turmeric', 'Cumin', 'Coriander powder', 'Chilli powder', 'Garam masala',
+  ].map(s => ({ name: s }));
+
+  const setManualMode = (on) => {
+    if (on) {
+      manualForm.classList.remove('hidden');
+      quickWrap.classList.add('hidden');
+      toggleBtn.textContent = '⚡ Quick pick';
+    } else {
+      manualForm.classList.add('hidden');
+      quickWrap.classList.remove('hidden');
+      toggleBtn.textContent = '✍️ Manual entry';
+    }
+  };
+
+  // Default: quick mode
+  setManualMode(false);
+
+  toggleBtn.addEventListener('click', () => {
+    const isManual = !manualForm.classList.contains('hidden');
+    setManualMode(!isManual);
+    if (!isManual) {
+      // switched to manual
+      document.getElementById('item-name')?.focus();
+    } else {
+      search.focus();
+    }
+  });
+
+  const renderList = () => {
+    const q = (search.value || '').trim().toLowerCase();
+    const items = q
+      ? COMMON_GROCERIES.filter(i => i.name.toLowerCase().includes(q))
+      : COMMON_GROCERIES;
+
+    if (!items.length) {
+      list.innerHTML = `<div class="quick-empty">No matches. Use <strong>Manual entry</strong> to add anything.</div>`;
+      return;
+    }
+
+    list.innerHTML = items.map(i => `
+      <button type="button" class="quick-item" data-name="${escHtml(i.name)}">
+        <span class="quick-item-name">${escHtml(i.name)}</span>
+        <span class="quick-item-action">Add</span>
+      </button>
+    `).join('');
+
+    list.querySelectorAll('.quick-item').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        // Copy quick controls into the real form fields, then reuse existing submit logic.
+        const name = btn.dataset.name || '';
+        const today = new Date().toISOString().split('T')[0];
+
+        document.getElementById('item-name').value = name;
+        document.getElementById('item-qty-value').value = String(parseFloat(quickQtyVal?.value) || 1);
+        document.getElementById('item-qty-unit').value = quickQtyUnit?.value || 'pieces';
+        document.getElementById('item-storage').value = quickStorage?.value || 'pantry';
+        document.getElementById('item-quantity').value = 'medium';
+        document.getElementById('item-purchase-date').value = today;
+        document.getElementById('item-packaged').checked = false;
+        document.getElementById('expiry-group').style.display = 'none';
+        document.getElementById('item-expiry').value = '';
+
+        await submitAddItem();
+
+        // Keep quick flow fast: re-focus search and reset qty to 1 (common case).
+        if (quickQtyVal) quickQtyVal.value = 1;
+        search.focus();
+      });
+    });
+  };
+
+  search.addEventListener('input', renderList);
+  renderList();
 }
 
 // ── View Switching ─────────────────────────────────────
