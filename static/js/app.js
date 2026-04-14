@@ -197,6 +197,22 @@ function bindEvents() {
   // Add item form
   document.getElementById('item-packaged').addEventListener('change', (e) => {
     document.getElementById('expiry-group').style.display = e.target.checked ? 'flex' : 'none';
+    if (e.target.checked) {
+      // Ensure the expiry date field is visible.
+      const detailsEl = document.getElementById('item-packaged')?.closest('details');
+      if (detailsEl) detailsEl.open = true;
+    }
+  });
+
+  // Add Item Accordion "plus/minus" indicator
+  document.querySelectorAll('.form-accordion').forEach(details => {
+    const sigil = details.querySelector('.accordion-sigil');
+    const update = () => {
+      if (!sigil) return;
+      sigil.textContent = details.open ? '—' : '+';
+    };
+    details.addEventListener('toggle', update);
+    update();
   });
 
   document.getElementById('add-item-form').addEventListener('submit', async (e) => {
@@ -595,7 +611,7 @@ function renderTracker() {
     return `<div class="tracker-item" id="ti-${item.id}">
       <span style="font-size:18px">${item.category_icon || '🍽️'}</span>
       <div class="tracker-item-name">${escHtml(item.name)}</div>
-      ${expiryLabel ? `<span class="tracker-item-expiry ${days !== null && days <= 2 ? 'style="color:var(--warn)"' : ''}">${expiryLabel}</span>` : ''}
+      ${expiryLabel ? `<span class="tracker-item-expiry${days !== null && days <= 2 ? ' tracker-item-expiry--urgent' : ''}">${expiryLabel}</span>` : ''}
       <div class="tracker-item-actions">
         <button class="ti-btn used" onclick="trackerConsumed(${item.id}, '${escHtml(item.name)}')">✅ Used</button>
         <button class="ti-btn waste" onclick="trackerWasted(${item.id}, '${escHtml(item.name)}')">🗑️</button>
