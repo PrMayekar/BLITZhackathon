@@ -111,7 +111,15 @@
           </button>
           <button class="nav-item" data-view="tracker">
             <span class="nav-icon">📅</span>
-            <span class="nav-label">Daily Tracker</span>
+            <span class="nav-label" data-i18n="nav_tracker">Daily Tracker</span>
+          </button>
+          <button class="nav-item" data-view="scan">
+            <span class="nav-icon">📷</span>
+            <span class="nav-label" data-i18n="nav_scan">Scan Receipt</span>
+          </button>
+          <button class="nav-item" data-view="nutrition">
+            <span class="nav-icon">🔬</span>
+            <span class="nav-label" data-i18n="nav_nutrition">Nutrition</span>
           </button>
         </div>
         <div class="sidebar-footer">
@@ -119,7 +127,8 @@
             <span class="user-avatar">👤</span>
             <span class="user-name" id="sidebar-username">—</span>
           </div>
-          <button class="btn-logout" id="logout-btn">Sign Out</button>
+          <button class="btn-hindi" id="hindi-toggle-btn" title="Switch to Hindi">🇮🇳 हिंदी</button>
+          <button class="btn-logout" id="logout-btn" data-i18n="sign_out">Sign Out</button>
         </div>
       </nav>
 
@@ -428,6 +437,149 @@
           </div>
         </div>
 
+
+        <!-- SCAN RECEIPT VIEW -->
+        <div class="view" id="view-scan">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title" data-i18n="scan_title">Scan Receipt 📷</h2>
+              <p class="view-subtitle" data-i18n="scan_sub">Upload a grocery bill or receipt to auto-add items</p>
+            </div>
+          </div>
+          <div class="scan-layout">
+            <div class="scan-upload-panel" id="scan-upload-panel">
+              <div class="scan-drop-zone" id="scan-drop-zone">
+                <div class="scan-drop-icon">📄</div>
+                <div class="scan-drop-title" data-i18n="scan_drop_title">Drop your receipt here</div>
+                <div class="scan-drop-sub" data-i18n="scan_drop_sub">or click to browse · JPG, PNG, WebP · Max 5MB</div>
+                <input type="file" id="scan-file-input" accept="image/*" class="hidden" />
+                <button class="btn-primary" id="scan-browse-btn" data-i18n="scan_browse">Browse File</button>
+              </div>
+              <div class="scan-preview hidden" id="scan-preview">
+                <img id="scan-preview-img" src="" alt="Receipt preview" />
+                <button class="btn-secondary scan-clear-btn" id="scan-clear-btn" data-i18n="scan_clear">✕ Clear</button>
+              </div>
+              <button class="btn-primary btn-lg" id="scan-submit-btn" disabled data-i18n="scan_btn">
+                🔍 Extract Items from Receipt
+              </button>
+              <div class="scan-status" id="scan-status"></div>
+            </div>
+            <div class="scan-results-panel">
+              <div class="scan-results-header hidden" id="scan-results-header">
+                <h3 data-i18n="scan_found">Items Found</h3>
+                <span class="scan-count-chip" id="scan-count-chip">0 items</span>
+              </div>
+              <div id="scan-results-list" class="scan-results-list"></div>
+              <div class="scan-actions hidden" id="scan-actions">
+                <button class="btn-primary" id="scan-add-all-btn" data-i18n="scan_add_all">✅ Add All to Pantry</button>
+                <button class="btn-secondary" id="scan-add-selected-btn" data-i18n="scan_add_selected">Add Selected</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NUTRITION VIEW -->
+        <div class="view" id="view-nutrition">
+          <div class="view-header">
+            <div>
+              <h2 class="view-title" data-i18n="nutrition_title">Nutrition Tracker 🔬</h2>
+              <p class="view-subtitle" data-i18n="nutrition_sub">Nutritional breakdown of your pantry and consumption</p>
+            </div>
+            <button class="btn-secondary" id="refresh-nutrition" data-i18n="refresh">🔄 Refresh</button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="filter-bar nutrition-tabs">
+            <button class="filter-btn active" data-ntab="pantry" data-i18n="n_tab_pantry">📦 In My Pantry</button>
+            <button class="filter-btn" data-ntab="consumed" data-i18n="n_tab_consumed">✅ Consumed (7 days)</button>
+            <button class="filter-btn" data-ntab="daily" data-i18n="n_tab_daily">📅 Daily Average</button>
+          </div>
+
+          <!-- Macro cards -->
+          <div class="macro-grid" id="macro-grid">
+            <div class="macro-card macro-cal">
+              <div class="macro-icon">🔥</div>
+              <div class="macro-val" id="m-calories">—</div>
+              <div class="macro-lbl" data-i18n="calories">Calories</div>
+              <div class="macro-unit">kcal</div>
+            </div>
+            <div class="macro-card macro-protein">
+              <div class="macro-icon">💪</div>
+              <div class="macro-val" id="m-protein">—</div>
+              <div class="macro-lbl" data-i18n="protein">Protein</div>
+              <div class="macro-unit">g</div>
+            </div>
+            <div class="macro-card macro-carbs">
+              <div class="macro-icon">🌾</div>
+              <div class="macro-val" id="m-carbs">—</div>
+              <div class="macro-lbl" data-i18n="carbs">Carbohydrates</div>
+              <div class="macro-unit">g</div>
+            </div>
+            <div class="macro-card macro-fat">
+              <div class="macro-icon">🥑</div>
+              <div class="macro-val" id="m-fat">—</div>
+              <div class="macro-lbl" data-i18n="fat">Fat</div>
+              <div class="macro-unit">g</div>
+            </div>
+            <div class="macro-card macro-fiber">
+              <div class="macro-icon">🥦</div>
+              <div class="macro-val" id="m-fiber">—</div>
+              <div class="macro-lbl" data-i18n="fiber">Fiber</div>
+              <div class="macro-unit">g</div>
+            </div>
+          </div>
+
+          <!-- Macro distribution bar -->
+          <div class="macro-bar-section">
+            <h3 class="section-label" data-i18n="macro_dist">Macro Distribution</h3>
+            <div class="macro-dist-bar" id="macro-dist-bar">
+              <div class="mdb-protein" id="mdb-protein" style="width:33%">💪</div>
+              <div class="mdb-carbs"   id="mdb-carbs"   style="width:34%">🌾</div>
+              <div class="mdb-fat"     id="mdb-fat"     style="width:33%">🥑</div>
+            </div>
+            <div class="macro-dist-legend">
+              <span class="mdl-item protein-color" data-i18n="protein">Protein</span>
+              <span class="mdl-item carbs-color"   data-i18n="carbs">Carbs</span>
+              <span class="mdl-item fat-color"     data-i18n="fat">Fat</span>
+            </div>
+          </div>
+
+          <!-- Per-item breakdown -->
+          <div class="nutrition-breakdown-section">
+            <h3 class="section-label" data-i18n="per_item">Per Item Breakdown</h3>
+            <div class="nutrition-table-wrap">
+              <table class="nutrition-table" id="nutrition-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="item">Item</th>
+                    <th data-i18n="grams">Est. Grams</th>
+                    <th data-i18n="calories">Calories</th>
+                    <th data-i18n="protein">Protein</th>
+                    <th data-i18n="carbs">Carbs</th>
+                    <th data-i18n="fat">Fat</th>
+                  </tr>
+                </thead>
+                <tbody id="nutrition-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Top items -->
+          <div class="top-nutrients-grid" id="top-nutrients-grid">
+            <div class="top-nutrient-card">
+              <h4>💪 <span data-i18n="top_protein">Highest Protein</span></h4>
+              <div id="top-protein-list" class="top-nutrient-list"></div>
+            </div>
+            <div class="top-nutrient-card">
+              <h4>🌾 <span data-i18n="top_carbs">Highest Carbs</span></h4>
+              <div id="top-carbs-list" class="top-nutrient-list"></div>
+            </div>
+            <div class="top-nutrient-card">
+              <h4>🔥 <span data-i18n="top_cal">Highest Calories</span></h4>
+              <div id="top-cal-list" class="top-nutrient-list"></div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
 
@@ -441,8 +593,59 @@
 
     <!-- Toast -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- FreshBot Chat Widget -->
+    <div id="chatbot-widget">
+      <button class="chat-bubble" id="chat-bubble" title="Ask FreshBot">
+        <span class="bubble-icon" id="bubble-icon">🌿</span>
+        <span class="bubble-badge hidden" id="bubble-badge">1</span>
+      </button>
+      <div class="chat-panel hidden" id="chat-panel">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <div class="chat-avatar">🌿</div>
+            <div>
+              <div class="chat-title">FreshBot</div>
+              <div class="chat-subtitle" id="chat-subtitle">Your kitchen assistant</div>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="chat-hbtn" id="chat-clear-btn" title="Clear chat">🗑</button>
+            <button class="chat-hbtn" id="chat-close-btn" title="Close">✕</button>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-welcome">
+            <div class="welcome-emoji">🌿</div>
+            <div class="welcome-text">Hi! I am <strong>FreshBot</strong> your personal kitchen assistant.</div>
+            <div class="welcome-sub">Ask me about nutrition, shelf life, cooking tips, food waste, or anything food-related!</div>
+          </div>
+        </div>
+        <div class="chat-suggestions" id="chat-suggestions">
+          <div class="suggestions-scroll" id="suggestions-scroll"></div>
+        </div>
+        <div class="chat-typing hidden" id="chat-typing">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          <span class="typing-label">FreshBot is thinking...</span>
+        </div>
+        <div class="chat-input-row">
+          <div class="chat-pantry-toggle">
+            <input type="checkbox" id="pantry-toggle" checked />
+            <label for="pantry-toggle">🧺 Use my pantry</label>
+          </div>
+          <div class="chat-input-wrap">
+            <textarea id="chat-input" class="chat-input" placeholder="Ask about nutrition, shelf life, recipes..." rows="1"></textarea>
+            <button class="chat-send-btn" id="chat-send-btn">&#10148;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End FreshBot -->
   </div>
 
   <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/chatbot.js' %}"></script>
+  <script src="{% static 'js/scan_nutrition.js' %}"></script>
+  <script src="{% static 'js/hindi.js' %}"></script>
 </body>
 </html>

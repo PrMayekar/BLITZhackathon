@@ -220,6 +220,9 @@ function switchView(viewId) {
     document.getElementById('item-purchase-date').value = new Date().toISOString().split('T')[0];
     loadRecentlyAdded();
   }
+  if (viewId === 'nutrition' && typeof window.loadNutrition === 'function') {
+    window.loadNutrition();
+  }
 }
 
 // ── Data Loaders ───────────────────────────────────────
@@ -305,44 +308,23 @@ async function loadLocalRecipes() {
 function renderLocalRecipes() {
   const container = document.getElementById('recipes-container');
   if (!state.recommendations) return;
-  
   const tab = state.currentRecipeTab;
   const recipes = state.recommendations[tab] || [];
-  
   if (!recipes.length) {
     const msgs = {
-      expiry_alert: '⚠️ No near-expiry items found. Add items with expiry dates to see urgent suggestions.',
-      time_of_day: '🕐 No recipes match your current time of day with your ingredients.',
-      health: '💪 No health-tagged recipes match your pantry.',
-      weekend_special: '🎉 Weekend special recipes appear on Saturdays & Sundays!',
-      general: '📋 Add items to your pantry and we\'ll find matching recipes.',
+      expiry_alert: 'No near-expiry items found. Add items with expiry dates to see urgent suggestions.',
+      time_of_day: 'No recipes match your current time of day with your ingredients.',
+      health: 'No health-tagged recipes match your pantry.',
+      weekend_special: 'Weekend special recipes appear on Saturdays & Sundays!',
+      general: 'Add items to your pantry and we\'ll find matching recipes.',
     };
-    container.innerHTML = `<div class="empty-recipes">
-      <div style="font-size:48px">🍽️</div>
-      <p>${msgs[tab] || 'No recipes found.'}</p>
-      ${tab === 'general' && state.items.length === 0 ? '<button class="btn-primary" style="margin-top:16px" onclick="switchView(\'add-item\')">+ Add Groceries</button>' : ''}
-    </div>`;
+    container.innerHTML = `<div class="empty-recipes"><div style="font-size:48px">🍽️</div><p>${msgs[tab]||'No recipes found.'}</p></div>`;
     return;
   }
-  
   container.innerHTML = `<div class="recipes-grid">${recipes.map(r => localRecipeCardHTML(r)).join('')}</div>`;
-  
-  // Re-attach event listeners
   container.querySelectorAll('.recipe-card[data-source="local"]').forEach(card => {
-    card.addEventListener('click', (e) => {
-      // Don't trigger if clicking on buttons inside
-      if (e.target.closest('.btn-primary, .btn-secondary, button')) return;
-      openLocalRecipeModal(card.dataset.id);
-    });
+    card.addEventListener('click', () => openLocalRecipeModal(card.dataset.id));
   });
-}
-
-function markStep(stepId) {
-  const step = document.getElementById(stepId);
-  if (step) {
-    document.querySelectorAll('.lstep').forEach(s => s.classList.remove('active'));
-    step.classList.add('active');
-  }
 }
 
 // ── LIVE Recipes (MealDB) ──────────────────────────────
@@ -350,7 +332,6 @@ async function fetchAndScoreLiveRecipes() {
   const container = document.getElementById('recipes-container');
   const statusChip = document.getElementById('live-status-chip');
   const liveDot = document.getElementById('live-dot');
-  if (liveDot) liveDot.classList.remove('pulsing', 'live-active');
 
   state.liveStatus = 'loading';
   liveDot.classList.add('pulsing');
@@ -523,46 +504,38 @@ function sectionHeader(title, type) {
 // ── Recipe Card HTML ───────────────────────────────────
 function localRecipeCardHTML(r) {
   const scorePct = Math.round(r.score * 100);
-  const categoryClass = r.category === 'optimal' ? 'optimal' : (r.category === 'partial' ? 'partial' : 'low');
-  
   const tags = (r.health_tags || []).slice(0, 3).map(t => `<span class="rc-tag">${healthTagLabel(t)}</span>`).join('');
-  
   const expiryAlert = r.expiry_items_used?.length
-    ? `<div class="rc-waste-insight">♻️ <strong>Waste Saver!</strong> Uses ${r.expiry_items_used.slice(0,2).map(escHtml).join(', ')}</div>` 
-    : '';
-  
+    ? `<div class="rc-waste-insight">♻️ Saves: ${r.expiry_items_used.slice(0,2).map(escHtml).join(', ')}</div>` : '';
   const matched = (r.matched_ingredients || []).slice(0, 4);
   const missing = (r.missing_ingredients || []).slice(0, 3);
-  const totalIngs = matched.length + (r.missing_ingredients || []).length;
-  
   return `<div class="recipe-card" data-source="local" data-id="${r.recipe_id}">
     <div class="rc-header">
-      <div class="rc-emoji">${r.image_emoji || '🍳'}</div>
+      <div class="rc-emoji">${r.image_emoji}</div>
       <div class="rc-title-wrap">
         <div class="rc-title">${escHtml(r.title)}</div>
-        <div class="rc-desc">${escHtml(r.description || 'Delicious recipe from your pantry')}</div>
+        <div class="rc-desc">${escHtml(r.description)}</div>
       </div>
-      <span class="qr-badge badge-${categoryClass}">${capitalise(r.category)}</span>
+      <span class="qr-badge badge-${r.category}">${capitalise(r.category)}</span>
     </div>
     <div class="rc-body">
       <div class="rc-meta">
         <span class="rc-meta-item">⏱ ${r.prep_time + r.cook_time} min</span>
         <span class="rc-meta-item">👤 ${r.servings}</span>
-        <span class="rc-meta-item">📊 ${capitalise(r.difficulty || 'medium')}</span>
+        <span class="rc-meta-item">📊 ${capitalise(r.difficulty)}</span>
         ${r.calories_per_serving ? `<span class="rc-meta-item">🔥 ${r.calories_per_serving} kcal</span>` : ''}
       </div>
       <div class="rc-score-row">
-        <span style="font-size:11px;color:var(--text3);font-weight:700">MATCH SCORE</span>
-        <div class="score-meter"><div class="score-fill ${categoryClass}" style="width:${scorePct}%"></div></div>
+        <span style="font-size:11px;color:var(--text3)">Match</span>
+        <div class="score-meter"><div class="score-fill ${r.category}" style="width:${scorePct}%"></div></div>
         <span class="score-pct">${scorePct}%</span>
       </div>
       ${tags ? `<div class="rc-tags">${tags}</div>` : ''}
       <div class="rc-ingredients">
-        <div class="rc-ingr-label">📦 INGREDIENTS (${totalIngs})</div>
+        <div class="rc-ingr-label">Ingredients</div>
         <div class="rc-ingr-chips">
-          ${matched.map(m => `<span class="ingr-chip matched">✓ ${escHtml(m.name || m)}</span>`).join('')}
+          ${matched.map(m => `<span class="ingr-chip matched">✓ ${escHtml(m.name||m)}</span>`).join('')}
           ${missing.map(m => `<span class="ingr-chip missing">✗ ${escHtml(m)}</span>`).join('')}
-          ${totalIngs > 7 ? `<span class="ingr-chip" style="background:var(--surface2)">+${totalIngs - 7} more</span>` : ''}
         </div>
       </div>
       ${expiryAlert}
@@ -924,18 +897,11 @@ function loadRecentlyAdded() {
 
 async function markConsumed(id) {
   const item = state.items.find(i => String(i.id) === String(id));
-  if (!item) return;
   try {
     await API.post(`/inventory/items/${id}/mark_consumed/`, {});
     state.items = state.items.filter(i => String(i.id) !== String(id));
-    renderPantry(); 
-    toast(`✅ ${item.name} marked as used`, 'success');
-    await loadDashboard(); 
-    loadLocalRecipes();
-    // Refresh tracker if active
-    if (document.getElementById('view-tracker').classList.contains('active')) {
-      renderTracker();
-    }
+    renderPantry(); toast(`✅ ${item?.name||'Item'} marked as used`, 'success');
+    await loadDashboard(); loadLocalRecipes();
   } catch { toast('Action failed', 'error'); }
 }
 

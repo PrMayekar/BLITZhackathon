@@ -1,6 +1,30 @@
 # 🌿 FreshTrack — Food Waste Reduction System
 
+## 📸 Demo Preview
+
+### 🏠 Dashboard
+<img width="1920" height="1080" alt="Dashboard" src="https://github.com/user-attachments/assets/a91fc93e-33f6-4a04-aee3-3911ce70fc34" />
+
+### 🧺 My Pantry
+<img width="1920" height="1080" alt="Pantry" src="https://github.com/user-attachments/assets/47265115-5a69-4731-830f-6167ac40a679" />
+
+### ➕ Add Groceries
+<img width="1920" height="1080" alt="Add Groceries" src="https://github.com/user-attachments/assets/19f8b144-e8a3-4a7c-894d-2d0de5caf1c5" />
+
+### 🍽️ Recipe Ideas
+<img width="1920" height="1080" alt="Recipes" src="https://github.com/user-attachments/assets/12accea2-acd1-4361-b3b4-3ff643c45cd2" />
+
+### 📊 Daily Tracker
+<img width="1920" height="1080" alt="Daily Tracker" src="https://github.com/user-attachments/assets/fd1b43b9-e92c-4998-81fa-cd50d5099e47" />
+
+---
+
+A full-stack web application built with **Django (Python)** + **MySQL** backend and a custom HTML/CSS/JS frontend to help households track groceries, reduce food waste, and get smart recipe recommendations.
+
+# 🌿 FreshTrack — Food Waste Reduction System
+
 A full-stack web application built with **Django** (Python) + **MySQL** backend and a custom HTML/CSS/JS frontend to help households track groceries, reduce food waste, and get smart recipe recommendations.
+
 
 ## 🚀 Quick Start
 
@@ -28,7 +52,7 @@ python manage.py migrate
 python manage.py loaddata inventory/fixtures/categories.json
 
 # 6. Seed recipes (run this one-time script)
-python manage.py shell < seed_recipes.py   # see note below
+Get-Content seed_recipes.py | python manage.py shell   # see note below
 
 # 7. Start the server
 python manage.py runserver

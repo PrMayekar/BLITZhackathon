@@ -1,5 +1,15 @@
 from pathlib import Path
 
+from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Now you can access it
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-freshtrack-secret-key-change-in-production'
 DEBUG = True
@@ -18,6 +28,7 @@ INSTALLED_APPS = [
     'accounts',
     'inventory',
     'recipes',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +68,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'freshtrack_db',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {'charset': 'utf8mb4'},

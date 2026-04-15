@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/auth/', include('accounts.urls')),
     path('api/inventory/', include('inventory.urls')),
     path('api/recipes/', include('recipes.urls')),
+    path('api/chatbot/', include('chatbot.urls')),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
     path('<path:path>', TemplateView.as_view(template_name='index.html')),
 ]
