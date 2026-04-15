@@ -3,7 +3,7 @@
 ## 📸 Demo Preview
 
 ### 🏠 Dashboard
-<img width="1920" height="1080" alt="Dashboard" src="https://github.com/user-attachments/assets/a91fc93e-33f6-4a04-aee3-3911ce70fc34" />
+<img width="1920" height="1080" alt="Dashboard" src="images/dashboard.png" />
 
 ### 🧺 My Pantry
 <img width="1920" height="1080" alt="Pantry" src="https://github.com/user-attachments/assets/47265115-5a69-4731-830f-6167ac40a679" />
