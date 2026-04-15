@@ -3,19 +3,22 @@
 ## 📸 Demo Preview
 
 ### 🏠 Dashboard
-<img width="1920" height="1080" alt="Dashboard" src="Dashboard.png" />
+<img width="1920" height="1080" alt="Dashboard" src="images/Dashboard.png" />
 
 ### 🧺 My Pantry
-<img width="1920" height="1080" alt="Pantry" src="https://github.com/user-attachments/assets/47265115-5a69-4731-830f-6167ac40a679" />
+<img width="1920" height="1080" alt="Pantry" src="images/Pantry.png" />
 
 ### ➕ Add Groceries
-<img width="1920" height="1080" alt="Add Groceries" src="https://github.com/user-attachments/assets/19f8b144-e8a3-4a7c-894d-2d0de5caf1c5" />
+<img width="1920" height="1080" alt="Add Groceries" src="images/Add Groceries.png" />
 
 ### 🍽️ Recipe Ideas
-<img width="1920" height="1080" alt="Recipes" src="https://github.com/user-attachments/assets/12accea2-acd1-4361-b3b4-3ff643c45cd2" />
+<img width="1920" height="1080" alt="Recipes" src="images/Recipes.png" />
 
 ### 📊 Daily Tracker
-<img width="1920" height="1080" alt="Daily Tracker" src="https://github.com/user-attachments/assets/fd1b43b9-e92c-4998-81fa-cd50d5099e47" />
+<img width="1920" height="1080" alt="Daily Tracker" src="images/Daily Tracker.png" />
+
+### 📊 Nutrients Tracker
+<img width="1920" height="1080" alt="Nutrients Tracker" src="images/Nutrients Tracker.png" />
 
 ---
 
@@ -28,10 +31,17 @@ A full-stack web application built with **Django** (Python) + **MySQL** backend 
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Requirements
 - Python 3.10+
 - MySQL 8.0+ (or use SQLite for development)
 - pip
+- django
+- djangorestframework
+- django-cors-headers
+- mysqlclient
+- groq
+- requests
+- python-dotenv
 
 ### Installation
 
@@ -52,7 +62,7 @@ python manage.py migrate
 python manage.py loaddata inventory/fixtures/categories.json
 
 # 6. Seed recipes (run this one-time script)
-Get-Content seed_recipes.py | python manage.py shell   # see note below
+Get-Content seed_recipes.py | python manage.py shell  
 
 # 7. Start the server
 python manage.py runserver
@@ -83,6 +93,8 @@ DATABASES = {
     }
 }
 ```
+
+``` API KEY - Add your key in .env ```
 
 ## 📡 API Endpoints
 
